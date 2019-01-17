@@ -39,7 +39,7 @@ pipeline {
                 }
             }
         }
-        stage("publish to nexus") {
+        stage("publish zip to nexus") {
             steps {
                 script {
                         nexusArtifactUploader(
