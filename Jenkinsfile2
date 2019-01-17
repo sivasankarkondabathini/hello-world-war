@@ -49,8 +49,7 @@ pipeline {
                             credentialsId: NEXUS_CREDENTIAL_ID,
                             artifacts: [
                                 // Artifact generated such as .jar, .ear and .war files.
-                                [classifier: '',
-                                file: artifact.zip]
+                                [file: "artifact.zip"]
                             ]
                         );
                  }
