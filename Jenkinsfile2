@@ -46,16 +46,16 @@ pipeline {
                             nexusVersion: NEXUS_VERSION,
                             protocol: NEXUS_PROTOCOL,
                             nexusUrl: NEXUS_URL,
-                            groupId: com.inovalon,
+                            groupId: "com.inovalon",
                             version: "1.0.0",
                             repository: NEXUS_REPOSITORY,
                             credentialsId: NEXUS_CREDENTIAL_ID,
                             artifacts: [
                                 // Artifact generated as zip files.
-                                [artifactId: package,
+                                [artifactId: "package",
                                 classifier: '',
-                                file: artifact.zip,
-                                type: zip]
+                                file: "artifact.zip",
+                                type: "zip"]
                             ]
                         );
                  }
