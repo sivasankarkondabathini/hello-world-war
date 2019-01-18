@@ -6,7 +6,14 @@ pipeline {
         // Note: this should match with the tool name configured in your jenkins instance (JENKINS_URL/configureTools/)
         maven "Maven"
     }
-    environment {
+    environment { 
+   	rtServer (
+    		id: "Artifactory-1",
+    		url: "http://ec2-3-121-214-48.eu-central-1.compute.amazonaws.com:8081/artifactory",
+    		username: "admin",
+    		password: "admin123"
+	)
+	
         // This can be nexus3 or nexus2
         NEXUS_VERSION = "nexus3"
         // This can be http or https
@@ -48,26 +55,22 @@ pipeline {
         stage("publish to Artifactory") {
             steps {
                 script {
-			            echo "Artifactory server: ${artifactoryServer}"
-        
-			            def uploadSpec = """
-			            {
-				              "files": [
-				                  {
-					                  "pattern": "artifact.zip",
-					                  "target": "${ARTIFACTORY_PATH}"
-				                  }
-					            ]
-			            }"""
-          			def buildInfo = artifactoryServer.upload(uploadSpec)
-			          echo "Build info: ${buildInfo}"
-        
-			        if(publish)
-			        {
-				          artifactoryServer.publishBuildInfo(buildInfo)
-			        }
-           }
-          }
+		    //echo "Artifactory server: ${artifactoryServer}"
+		    
+        	    rtUpload (
+    			serverId: "Artifactory-1",
+    			spec:
+        		"""{
+          			"files": [
+            				{
+              				"pattern": "artifact.zip",
+              				"target": "${ARTIFACTORY_REPOSITORY}"
+            				}
+         			]
+        		}"""
+)
+                }
+            }
         }
     }
 }
