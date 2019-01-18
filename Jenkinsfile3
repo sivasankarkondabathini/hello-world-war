@@ -52,10 +52,11 @@ pipeline {
 		       	rtServer (
     				id: "Artifactory-1",
     				url: "http://ec2-3-121-214-48.eu-central-1.compute.amazonaws.com:8081/artifactory",
-    				username: "admin",
-    				password: "admin123"
+				credentialsId: "${NEXUS_CREDENTIAL_ID}"
+    				//username: "admin",
+    				//password: "admin123"
 				)
-        	    rUpload (
+        	    rtUpload (
     			serverId: "Artifactory-1",
     			spec:
         		"""{
