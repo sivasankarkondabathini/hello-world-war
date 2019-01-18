@@ -7,22 +7,16 @@ pipeline {
         maven "Maven"
     }
     environment { 
-        // This can be nexus3 or nexus2
-        NEXUS_VERSION = "nexus3"
-        // This can be http or https
-        NEXUS_PROTOCOL = "http"
-        // Where your Nexus is running
-        NEXUS_URL = "ec2-3-121-214-48.eu-central-1.compute.amazonaws.com/"
-        // Repository where we will upload the artifact
-        NEXUS_REPOSITORY = "Generic"
-        // Jenkins credential id to authenticate to Nexus OSS
-        NEXUS_CREDENTIAL_ID = "nexus-credentials"
-       
         ARTIFACTORY_URL = "http://ec2-3-121-214-48.eu-central-1.compute.amazonaws.com:8081/artifactory"
-        artifactoryServer = Artifactory.newServer url: "${ARTIFACTORY_URL}", credentialsId: 'nexus-credentials'
+	
+	// Repository where we will upload the artifact
         ARTIFACTORY_REPOSITORY = "maven-repository"
+	
+	// Directory in repository
         ARTIFACTORY_PATH = "${ARTIFACTORY_REPOSITORY}/PearUp/"
-        publish= "true"
+	
+	// Jenkins credential id to authenticate to Artifactory
+	ARTIFACTORY_CREDENTIAL_ID = "nexus-credentials"
     }
     stages {
         stage("clone code") {
@@ -48,14 +42,11 @@ pipeline {
         stage("publish to Artifactory") {
             steps {
                 script {
-		    //echo "Artifactory server: ${artifactoryServer}"
-		       	rtServer (
-    				id: "Artifactory-1",
-    				url: "http://ec2-3-121-214-48.eu-central-1.compute.amazonaws.com:8081/artifactory",
-				credentialsId: "${NEXUS_CREDENTIAL_ID}"
-    				//username: "admin",
-    				//password: "admin123"
-				)
+		    rtServer (
+    		    	id: "Artifactory-1",
+    			url: "${ARTIFACTORY_URL}",
+			credentialsId: "${ARTIFACTORY_CREDENTIAL_ID}"
+		    )
         	    rtUpload (
     			serverId: "Artifactory-1",
     			spec:
@@ -63,11 +54,11 @@ pipeline {
           			"files": [
             				{
               				"pattern": "artifact.zip",
-              				"target": "${ARTIFACTORY_REPOSITORY}"
+              				"target": "${ARTIFACTORY_PATH}"
             				}
          			]
         		}"""
-)
+		    )
                 }
             }
         }
