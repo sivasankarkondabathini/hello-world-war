@@ -20,7 +20,7 @@ pipeline {
        
         ARTIFACTORY_URL = "http://ec2-3-121-214-48.eu-central-1.compute.amazonaws.com:8081/artifactory"
         artifactoryServer = Artifactory.newServer url: "${ARTIFACTORY_URL}", credentialsId: 'nexus-credentials'
-        ARTIFACTORY_REPOSITORY = "generic-repository"
+        ARTIFACTORY_REPOSITORY = "maven-repository"
         ARTIFACTORY_PATH = "${ARTIFACTORY_REPOSITORY}/PearUp/"
         publish= "true"
     }
