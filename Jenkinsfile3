@@ -1,0 +1,73 @@
+pipeline {
+    agent {
+        label "BuildNode"
+    }
+    tools {
+        // Note: this should match with the tool name configured in your jenkins instance (JENKINS_URL/configureTools/)
+        maven "Maven"
+    }
+    environment {
+        // This can be nexus3 or nexus2
+        NEXUS_VERSION = "nexus3"
+        // This can be http or https
+        NEXUS_PROTOCOL = "http"
+        // Where your Nexus is running
+        NEXUS_URL = "ec2-3-121-214-48.eu-central-1.compute.amazonaws.com/"
+        // Repository where we will upload the artifact
+        NEXUS_REPOSITORY = "Generic"
+        // Jenkins credential id to authenticate to Nexus OSS
+        NEXUS_CREDENTIAL_ID = "nexus-credentials"
+       
+        ARTIFACTORY_URL = "http://ec2-3-121-214-48.eu-central-1.compute.amazonaws.com:8081/artifactory"
+        artifactoryServer = Artifactory.newServer url: "${ARTIFACTORY_URL}", credentialsId: 'nexus-credentials'
+        ARTIFACTORY_REPOSITORY = "generic-repository"
+        ARTIFACTORY_PATH = "${ARTIFACTORY_REPOSITORY}/PearUp/"
+        publish= "true"
+    }
+    stages {
+        stage("clone code") {
+            steps {
+                script {
+                    // Let's clone the source
+                    git 'https://github.com/sivasankarkondabathini/hello-world-war.git';
+                }
+            }
+        }
+        stage("mvn build") {
+            steps {
+                script {
+                    // If you are using Windows then you should use "bat" step
+                    // Since unit testing is out of the scope we skip them
+                    sh "mvn package -DskipTests=true"
+                    
+                    // Compress binaries to publish into Artifactory
+                    sh "zip -r artifact.zip target/"
+                }
+            }
+        }
+        stage("publish to Artifactory") {
+            steps {
+                script {
+			            echo "Artifactory server: ${artifactoryServer}"
+        
+			            def uploadSpec = """
+			            {
+				              "files": [
+				                  {
+					                  "pattern": "artifact.zip",
+					                  "target": "${ARTIFACTORY_PATH}"
+				                  }
+					            ]
+			            }"""
+          			def buildInfo = artifactoryServer.upload(uploadSpec)
+			          echo "Build info: ${buildInfo}"
+        
+			        if(publish)
+			        {
+				          artifactoryServer.publishBuildInfo(buildInfo)
+			        }
+           }
+          }
+        }
+    }
+}
