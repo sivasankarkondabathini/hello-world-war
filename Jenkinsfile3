@@ -55,7 +55,7 @@ pipeline {
     				username: "admin",
     				password: "admin123"
 				)
-        	    rtUpload (
+        	    rUpload (
     			serverId: "Artifactory-1",
     			spec:
         		"""{
