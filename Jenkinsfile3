@@ -7,14 +7,12 @@ pipeline {
         maven "Maven"
     }
     environment { 
-        ARTIFACTORY_URL = "http://ec2-3-121-214-48.eu-central-1.compute.amazonaws.com:8081/artifactory"
-	
+        // where you artifactory is running
+        ARTIFACTORY_URL = "http://ec2-3-121-214-48.eu-central-1.compute.amazonaws.com:8081/artifactory"	
 	// Repository where we will upload the artifact
-        ARTIFACTORY_REPOSITORY = "maven-repository"
-	
+        ARTIFACTORY_REPOSITORY = "maven-repository"	
 	// Directory in repository
-        ARTIFACTORY_PATH = "${ARTIFACTORY_REPOSITORY}/PearUp/"
-	
+        ARTIFACTORY_PATH = "${ARTIFACTORY_REPOSITORY}/PearUp/"	
 	// Jenkins credential id to authenticate to Artifactory
 	ARTIFACTORY_CREDENTIAL_ID = "nexus-credentials"
     }
