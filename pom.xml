@@ -3,6 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.inovalon</groupId>
 	<artifactId>hello-world-war</artifactId>
+	<!-->SNAPSHOT variable is useful for Any artifactory to store binaries(war/jar) in timestamp without explicit versions. <!-->
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>Hello World Web Application Repository</name>
